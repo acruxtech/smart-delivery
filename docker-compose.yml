@@ -1,0 +1,43 @@
+services:
+  web:
+    build: ./app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app:/app
+    ports:
+      - "8888:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - minio
+      - redis
+
+  db:
+    image: postgres
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    command: server /data
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    volumes:
+      - minio_data:/data
+
+  redis:
+    image: redis:6-alpine
+
+volumes:
+  pgdata:
+  minio_data:
+
+networks:
+  localhost:
+    driver: bridge

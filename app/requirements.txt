@@ -1,0 +1,5 @@
+Django
+psycopg2-binary
+minio
+python-dotenv
+django-environ
