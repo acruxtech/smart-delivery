@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --error-color: #f72585;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-container:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: var(--dark-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .errorlist {
+            color: var(--error-color);
+            margin-bottom: 15px;
+            list-style: none;
+            padding: 10px;
+            background-color: rgba(247, 37, 133, 0.1);
+            border-radius: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h1>Create Account</h1>
+
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="help-text">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div class="form-footer">
+            Already have an account? <a href="{% url 'login' %}">Sign In</a>
+        </div>
+    </div>
+</body>
+</html>

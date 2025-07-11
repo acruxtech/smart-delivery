@@ -3,12 +3,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy
 
 
-class Role(models.TextChoices):
-    CUSTOMER = 'customer', gettext_lazy('Customer')
-    COURIER = 'courier', gettext_lazy('Courier')
-
-
 class User(AbstractUser):
+    class Role(models.TextChoices):
+        CUSTOMER = 'customer', gettext_lazy('Customer')
+        COURIER = 'courier', gettext_lazy('Courier')
+
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.CUSTOMER)
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)                                  # for customer
@@ -19,4 +18,4 @@ class User(AbstractUser):
 
     @property
     def is_courier(self):
-        return self.role == Role.COURIER
+        return self.role == self.Role.COURIER
