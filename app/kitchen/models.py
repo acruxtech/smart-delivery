@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.files.storage import storages
 
 
 class Ingredient(models.Model):
@@ -17,10 +18,22 @@ class Ingredient(models.Model):
         return self.name
 
 
+def menu_item_image_path(instance, filename):
+    return f"menu_items/{instance.id}/{filename}"
+
+
 class MenuItem(models.Model):
     name = models.CharField(
         max_length=100,
         verbose_name="Название блюда",
+    )
+    image = models.ImageField(
+        verbose_name="Фотография товара",
+        upload_to=menu_item_image_path,
+        storage=storages["minio"],
+        blank=True,
+        null=True,
+        help_text="Загрузите изображение товара"
     )
     current_stock = models.FloatField(
         verbose_name="Доступное количество",

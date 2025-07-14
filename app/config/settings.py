@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
+    'kitchen.apps.KitchenConfig',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -149,3 +151,26 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "minio": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "bucket_name": "menu-items",
+            "endpoint_url": f"http://{os.getenv('MINIO_ENDPOINT')}",
+            "access_key": os.getenv("MINIO_ACCESS_KEY"),
+            "secret_key": os.getenv("MINIO_SECRET_KEY"),
+            "file_overwrite": False,
+            "custom_domain": None,
+        },
+    },
+}
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  

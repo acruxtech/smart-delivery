@@ -3,3 +3,6 @@ psycopg2-binary
 minio
 python-dotenv
 django-environ
+django-storages
+boto3
+pillow

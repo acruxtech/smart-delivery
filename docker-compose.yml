@@ -1,7 +1,7 @@
 services:
   web:
     build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000 --noreload
     volumes:
       - ./app:/app
     ports:
@@ -10,8 +10,8 @@ services:
       - .env
     depends_on:
       - db
-#      - minio
-#      - redis
+      - minio
+      # - redis
 
   db:
     image: postgres
@@ -21,24 +21,27 @@ services:
       - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
-#
-#  minio:
-#    image: minio/minio
-#    command: server /data
-#    env_file:
-#      - .env
-#    ports:
-#      - "9000:9000"  # API
-#      - "9001:9001"  # Console
-#    volumes:
-#      - minio_data:/data
-#
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    environment:
+      - MINIO_LOG_LEVEL=error
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    volumes:
+      - minio_data:/data
+
 #  redis:
 #    image: redis:6-alpine
 
 volumes:
   pgdata:
   minio_data:
+
 
 networks:
   localhost:
